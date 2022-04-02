@@ -9,5 +9,5 @@ Developed by [Chris Hardin](https://github.com/chrishardin) and [Derek Zhang](ht
 # Things to know
 - Using this script may slow down other internet processes
 
-## Things to add
+# Things to add
 - to be continued..
