@@ -6,5 +6,8 @@ Developed by [Chris Hardin](https://github.com/chrishardin) and [Derek Zhang](ht
 - fs
 - node-fetch@2.6.1
 
+# Things to know
+- Using this script may slow down other internet processes
+
 ## Things to add
 - to be continued..
