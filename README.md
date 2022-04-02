@@ -5,6 +5,8 @@ Developed by [Chris Hardin](https://github.com/chrishardin) and [Derek Zhang](ht
 - cheerio
 - fs
 - node-fetch@2.6.1
+- readline
+- stream
 
 # Things to know
 - Using this script may slow down other internet processes
