@@ -5,3 +5,6 @@ Developed by [Chris Hardin](https://github.com/chrishardin) and [Derek Zhang](ht
 - cheerio
 - fs
 - node-fetch@2.6.1
+
+##Things to add
+- to be continued..
