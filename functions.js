@@ -131,9 +131,9 @@ module.exports.saveStrongBuyDataToFile = async (outputFile, allInputStocks, head
                             if(nextNum != 'null')
                             {
                                 if(currentNum == 0 && nextNum == 0)
-                                    yearlyIncrement.push(1); 
+                                    yearlyIncrement.push(0); 
                                 else if(currentNum == 0)
-                                    yearlyIncrement.push(0);
+                                    yearlyIncrement.push(1);
                                 else
                                     yearlyIncrement.push((nextNum / currentNum) - 1);
                             }
