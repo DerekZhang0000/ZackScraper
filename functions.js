@@ -156,7 +156,7 @@ module.exports.saveStrongBuyDataToFile = async (outputFile, allInputStocks, head
         }
         if(allInputStocks.indexOf(stock) == allInputStocks.length - 1)
         {
-            callback(strongBuyStocks);
+            // callback(strongBuyStocks);
         }
     })
 }
@@ -231,5 +231,7 @@ module.exports.runProgram = async (inputFile, outputFile, headers, headers2) => 
         throw console.log("only supports txt or csv output files")
     }
 
-    this.inputStocks(inputFile, allInputStocks => this.saveStrongBuyDataToFile(outputFile, allInputStocks, headers, headers2, strongBuyStocks => this.outputStockData(outputFile, strongBuyStocks)) );
+    // this.outputStockData is for post run data if needed
+    // when enabled, remove comment from saveStrongBuyDataToFile(~159)::callback()
+    this.inputStocks(inputFile, allInputStocks => this.saveStrongBuyDataToFile(outputFile, allInputStocks, headers, headers2, /*strongBuyStocks => this.outputStockData(outputFile, strongBuyStocks) */) );
 }
