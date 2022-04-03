@@ -24,7 +24,7 @@ module.exports.getCSVData = ($, headers, stock) => {
 
     const HEADER_CONFIG = {
         'Symbol' : { parser: stock},
-        'Name' : { parser: $(`a[href=/stock/quote/${stock}]`)[0].children[0].data.split(' (')[0]},
+        'Name' : { parser: $(`a[href=/stock/quote/${stock}]`)[0].children[0].data.split(' (')[0].replace(/,/g,'')},
         'Industry Major' : { parser: mainData.split('Industry: ').pop().split(' - ')[0]},
         'Industry Minor' : { parser: mainData.split('Industry: ').pop().split(' - ')[1]},
         'Rank' : { parser: mainData.split('\n')[3].split(')')[0] + ')' },
@@ -123,14 +123,19 @@ module.exports.saveStrongBuyDataToFile = async (outputFile, allInputStocks, head
                         content2 += `${incrementGrowthCounter},`;
                         yearlyIncrement = [];
 
-                        // IncomeDiff cell
+                        // Average Growth cell
                         reverseNetIncomes.forEach((element, index) => {
                             let currentNum = Number(reverseNetIncomes[index]);
                             let nextNum = reverseNetIncomes[index + 1] ? Number(reverseNetIncomes[index + 1]) : 'null';
 
                             if(nextNum != 'null')
                             {
-                                yearlyIncrement.push((nextNum / currentNum) - 1);
+                                if(currentNum == 0 && nextNum == 0)
+                                    yearlyIncrement.push(1); 
+                                else if(currentNum == 0)
+                                    yearlyIncrement.push(0);
+                                else
+                                    yearlyIncrement.push((nextNum / currentNum) - 1);
                             }
                         });
 
@@ -138,7 +143,6 @@ module.exports.saveStrongBuyDataToFile = async (outputFile, allInputStocks, head
                             return previousValue + currentValue;
                         });
 
-                        // 
                         content2 += (sum / yearlyIncrement.length) + ','
 
                     }
