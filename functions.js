@@ -106,6 +106,7 @@ module.exports.saveStrongBuyDataToFile = async (outputFile, allInputStocks, head
 
                         // iterating over data found to add to csv (additional)
                         let yearlyIncrement = [];
+                        let incrementGrowthCounter = 0;
 
                         // Increment Each Year cell
                         reverseNetIncomes.forEach((element, index) => {
@@ -118,21 +119,8 @@ module.exports.saveStrongBuyDataToFile = async (outputFile, allInputStocks, head
                             }
                         });
                         
-                        content2 += yearlyIncrement.includes(false) ? 'FALSE,' : "TRUE,";
-                        yearlyIncrement = [];
-
-                        // Increment Last 3 Years cell
-                        reverseNetIncomes.slice(-3).forEach((element, index) => {
-                            let currentNum = Number(reverseNetIncomes[index]);
-                            let nextNum = reverseNetIncomes[index + 1] ? Number(reverseNetIncomes[index + 1]) : 'null';
-
-                            if(nextNum != 'null')
-                            {
-                                yearlyIncrement.push(currentNum <= nextNum ? true : false);
-                            }
-                        });
-                        
-                        content2 += yearlyIncrement.includes(false) ? 'FALSE,' : "TRUE,";
+                        yearlyIncrement.forEach(element => { if(element) incrementGrowthCounter++;})
+                        content2 += `${incrementGrowthCounter},`;
 
                         // IncomeDiff cell
                         let start = Number(reverseNetIncomes[0]);

@@ -30,8 +30,7 @@ const HEADER_CONFIG2 = [
     {type : 'Net Income 2 Years Ago', bool : true},
     {type : 'Net Income 1 Years Ago', bool : true},
     {type : 'Net Income Most Recent', bool : true},
-    {type : 'Increment Each Year', bool : true},
-    {type : 'Increment Last 3 Years', bool : true},
+    {type : 'Consecutive Net Income Growth', bool : true},
     {type : 'IncomeDiff', bool : true},
 ]
 
