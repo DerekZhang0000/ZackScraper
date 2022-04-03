@@ -8,7 +8,7 @@ const functions = require('./functions.js')
 * - smallStocksInput.txt
 */
 
-const INPUTFILE = 'smallStocksInput.txt';
+const INPUTFILE = 'testStocksInput.txt';
 const OUTPUTFILE = 'stocksOutput.csv';
 
 // If INPUTFILE is a .txt, only Symbol should be true
@@ -54,6 +54,6 @@ else
 
 let header2 = `${HEADERS2.slice(0, HEADERS2.length -1)}\n`;
 
-console.log(header)
-console.log(header2)
+// console.log(header)
+// console.log(header2)
 functions.runProgram(INPUTFILE, OUTPUTFILE, header, header2);

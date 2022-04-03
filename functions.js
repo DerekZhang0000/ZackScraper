@@ -13,7 +13,7 @@ module.exports.getRawData = (URL) => {
             return data;
         })
         .catch(error => {
-            //console.log('\n', error.code, URL)
+            console.log('\n', error.code, URL)
         });
 };
 
@@ -49,7 +49,7 @@ module.exports.saveStrongBuyDataToFile = async (outputFile, allInputStocks, head
     headers = headers.split('\n')[0].split(',');
 
     allInputStocks.forEach(async stock => {
-        console.log(stock)
+        // console.log(stock)
         URL = `https://www.zacks.com/stock/quote/${stock}/?q=${stock.toLowerCase()}` 
         const data = await this.getRawData(URL);
         const data2 = await this.getRawData(`https://www.zacks.com/stock/quote/${stock}/income-statement`);
@@ -73,7 +73,7 @@ module.exports.saveStrongBuyDataToFile = async (outputFile, allInputStocks, head
                 counter++;
             }
             
-            strongBuyStocks.push(stock)
+            strongBuyStocks.push(stock);
 
             if(outputFile.slice(-3) == 'csv')
             {
@@ -135,7 +135,7 @@ module.exports.inputStocks = async (inputFile, callback) => {
 
     // when done reading input file, scrape website for each
     rl.on('close', () => {
-        console.log('Total stock symbols given:', inputLineCount);
+        // console.log('Total stock symbols given:', inputLineCount);
         callback(stocks);
     })
 }
@@ -160,19 +160,19 @@ module.exports.outputStockData = async (outputFile, strongBuyStocks) => {
         
             // when done reading input file, scrape website for each
             rl.on('close', () => {
-                console.log('\nTotal stock symbols with 1-Strong Buy:', outputLineCount);
+                // console.log('\nTotal stock symbols with 1-Strong Buy:', outputLineCount);
             })
     }
     else
     {
-        console.log('\nTotal stock symbols with 1-Strong Buy:', strongBuyStocks.length);
+        // console.log('\nTotal stock symbols with 1-Strong Buy:', strongBuyStocks.length);
     }
 }
 
 // run the program
 module.exports.runProgram = async (inputFile, outputFile, headers, headers2) => {
 
-    console.log('Now running Money Duplication Glitch 4000.')
+    // console.log('Now running Money Duplication Glitch 4000.')
 
     if(outputFile.slice(-3) == 'txt')
     {
