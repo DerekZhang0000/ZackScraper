@@ -7,7 +7,7 @@ const functions = require('./functions.js')
 * - testStocksInput.txt
 */
 
-const INPUTFILE = 'testStocksInput.txt';
+const INPUTFILE = 'stocksInput.txt';
 const OUTPUTFILE = 'stocksOutput.csv';
 
 // If INPUTFILE is a .txt, only Symbol should be true
@@ -31,7 +31,7 @@ const HEADER_CONFIG2 = [
     {type : 'Net Income 1 Years Ago', bool : true},
     {type : 'Net Income Most Recent', bool : true},
     {type : 'Consecutive Net Income Growth', bool : true},
-    {type : 'IncomeDiff', bool : true},
+    {type : 'Average Growth', bool : true},
 ]
 
 let HEADERS = '';

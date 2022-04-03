@@ -108,7 +108,7 @@ module.exports.saveStrongBuyDataToFile = async (outputFile, allInputStocks, head
                         let yearlyIncrement = [];
                         let incrementGrowthCounter = 0;
 
-                        // Increment Each Year cell
+                        // Consecutive Net Income Growth cell
                         reverseNetIncomes.forEach((element, index) => {
                             let currentNum = Number(reverseNetIncomes[index]);
                             let nextNum = reverseNetIncomes[index + 1] ? Number(reverseNetIncomes[index + 1]) : 'null';
@@ -121,12 +121,25 @@ module.exports.saveStrongBuyDataToFile = async (outputFile, allInputStocks, head
                         
                         yearlyIncrement.forEach(element => { if(element) incrementGrowthCounter++;})
                         content2 += `${incrementGrowthCounter},`;
+                        yearlyIncrement = [];
 
                         // IncomeDiff cell
-                        let start = Number(reverseNetIncomes[0]);
-                        let last = Number(reverseNetIncomes[reverseNetIncomes.length -1]);
+                        reverseNetIncomes.forEach((element, index) => {
+                            let currentNum = Number(reverseNetIncomes[index]);
+                            let nextNum = reverseNetIncomes[index + 1] ? Number(reverseNetIncomes[index + 1]) : 'null';
 
-                        content2 += last - start + ','
+                            if(nextNum != 'null')
+                            {
+                                yearlyIncrement.push((nextNum / currentNum) - 1);
+                            }
+                        });
+
+                        let sum = yearlyIncrement.reduce(function (previousValue, currentValue) {
+                            return previousValue + currentValue;
+                        });
+
+                        // 
+                        content2 += (sum / yearlyIncrement.length) + ','
 
                     }
                         
