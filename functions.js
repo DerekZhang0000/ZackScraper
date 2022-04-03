@@ -82,6 +82,7 @@ module.exports.saveStrongBuyDataToFile = async (outputFile, allInputStocks, head
 
                 if(headers2)
                 {
+                    // getting data
                     var netIncomes = [];
                     netCounter = 0;
                     var links = $$("a");
@@ -91,13 +92,56 @@ module.exports.saveStrongBuyDataToFile = async (outputFile, allInputStocks, head
                             if(links[i].children[0].data != "Net Income" && netCounter != 5)
                             {
                                 netCounter++;
-                                netIncomes.push(links[i].children[0].data);
+                                netIncomes.push(links[i].children[0].data.replace(/,/g,''));
                             }
                                 
                         }
                     });
                     if(netIncomes)
-                        netIncomes.slice().reverse().forEach(element => content2 += ('"' + element + '",'))
+                    {
+                        let reverseNetIncomes = netIncomes.slice().reverse();
+                        reverseNetIncomes.forEach(element => content2 += (element + ','));
+
+                        // iterating over data found to add to csv (additional)
+                        let yearlyIncrement = [];
+
+                        // Increment Each Year cell
+                        reverseNetIncomes.forEach((element, index) => {
+                            let currentNum = Number(reverseNetIncomes[index]);
+                            let nextNum = reverseNetIncomes[index + 1] ? Number(reverseNetIncomes[index + 1]) : 'null';
+
+                            if(nextNum != 'null')
+                            {
+                                yearlyIncrement.push(currentNum <= nextNum ? true : false);
+                            }
+                        });
+                        
+                        content2 += yearlyIncrement.includes(false) ? 'FALSE,' : "TRUE,";
+                        yearlyIncrement = [];
+
+                        // Increment Last 3 Years cell
+                        reverseNetIncomes.slice(-3).forEach((element, index) => {
+                            let currentNum = Number(reverseNetIncomes[index]);
+                            let nextNum = reverseNetIncomes[index + 1] ? Number(reverseNetIncomes[index + 1]) : 'null';
+
+                            if(nextNum != 'null')
+                            {
+                                yearlyIncrement.push(currentNum <= nextNum ? true : false);
+                            }
+                        });
+                        
+                        content2 += yearlyIncrement.includes(false) ? 'FALSE,' : "TRUE,";
+
+                        // IncomeDiff cell
+                        let start = Number(reverseNetIncomes[0]);
+                        let last = Number(reverseNetIncomes[reverseNetIncomes.length -1]);
+
+                        content2 += last - start + ','
+
+                    }
+                        
+
+                    
                 }
 
                 content += content2;
@@ -152,20 +196,20 @@ module.exports.outputStockData = async (outputFile, strongBuyStocks) => {
         var rl = readline.createInterface(instream, outstream);
     
         var outputLineCount = 0;
-    
-            // read each line of the input file
-            rl.on('line', () => {
-                outputLineCount++;
-            });
         
-            // when done reading input file, scrape website for each
-            rl.on('close', () => {
-                // console.log('\nTotal stock symbols with 1-Strong Buy:', outputLineCount);
-            })
+        // read each line of the input file
+        rl.on('line', (line) => {
+            outputLineCount++;         
+        });
+    
+        // when done reading input file, scrape website for each
+        rl.on('close', () => {
+            // console.log('\n1 Total stock symbols with 1-Strong Buy:', outputLineCount);
+        })
     }
     else
     {
-        // console.log('\nTotal stock symbols with 1-Strong Buy:', strongBuyStocks.length);
+        // console.log('\n2 Total stock symbols with 1-Strong Buy:', strongBuyStocks.length);
     }
 }
 

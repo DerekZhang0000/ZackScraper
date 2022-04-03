@@ -4,11 +4,10 @@ const functions = require('./functions.js')
 * Input files
 * -----------
 * - stocksInput.txt
-* - sampleStocksInput.txt
-* - smallStocksInput.txt
+* - testStocksInput.txt
 */
 
-const INPUTFILE = 'testStocksInput.txt';
+const INPUTFILE = 'stocksInput.txt';
 const OUTPUTFILE = 'stocksOutput.csv';
 
 // If INPUTFILE is a .txt, only Symbol should be true
@@ -22,12 +21,17 @@ const HEADER_CONFIG = [
     {type : 'Momentum', bool : true},
     {type : 'VGM', bool : true},
 ]
+
+// either all true, or all false
 const HEADER_CONFIG2 = [
     {type : 'Net Income 4 Years Ago', bool : true},
     {type : 'Net Income 3 Years Ago', bool : true},
     {type : 'Net Income 2 Years Ago', bool : true},
     {type : 'Net Income 1 Years Ago', bool : true},
-    {type : 'Net Income Most Recent', bool : true}
+    {type : 'Net Income Most Recent', bool : true},
+    {type : 'Increment Each Year', bool : true},
+    {type : 'Increment Last 3 Years', bool : true},
+    {type : 'IncomeDiff', bool : true},
 ]
 
 let HEADERS = '';
