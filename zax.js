@@ -8,7 +8,7 @@ const functions = require('./functions.js')
 * - smallStocksInput.txt
 */
 
-const INPUTFILE = 'stocksInput.txt';
+const INPUTFILE = 'smallStocksInput.txt';
 const OUTPUTFILE = 'stocksOutput.csv';
 
 // If INPUTFILE is a .txt, only Symbol should be true
