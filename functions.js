@@ -17,26 +17,52 @@ module.exports.getRawData = (URL) => {
         });
 };
 
+module.exports.getCSVData = (location, headers, stock) => {
+    let retVal = '';
+    headers = headers.slice(0, headers.length -1);
+
+    const HEADER_CONFIG = {
+        'Symbol' : { parser: stock},
+        'Industry Major' : { parser: location.split('Industry: ').pop().split(' - ')[0]},
+        'Industry Minor' : { parser: location.split('Industry: ').pop().split(' - ')[1]},
+        'Rank' : { parser: location.split('\n')[3].split(')')[0] + ')' },
+        'Value' : { parser: location.split('Value')[0].slice(-2).slice(0, 1)},
+        'Growth' : { parser: location.split('Growth')[0].slice(-2).slice(0, 1)},
+        'Momentum' : { parser: location.split('Momentum')[0].slice(-2).slice(0, 1)},
+        'VGM' : { parser: location.split('VGM')[0].slice(-2).slice(0, 1)},
+    }
+   
+    headers.forEach(field => {
+        retVal += ((field == 'Industry Minor' && location.split('Industry: ').pop().split(' - ').length == 1) ? "," : (HEADER_CONFIG[field].parser + ','));
+    })
+    return retVal;
+}
+
 // uses cheerio scraper to find Strong Buys on zacks.com
-module.exports.saveStrongBuyDataToFile = async (outputFile, allInputStocks, callback) => {
+module.exports.saveStrongBuyDataToFile = async (outputFile, allInputStocks, headers, headers2, callback) => {
 
     let strongBuyStocks = []
     let counter = 0;
     let $;
     console.log('Stocks listed as 1-Strong Buy: ')
 
+    headers = headers.split('\n')[0].split(',');
+
     allInputStocks.forEach(async stock => {
+        console.log(stock)
         URL = `https://www.zacks.com/stock/quote/${stock}/?q=${stock.toLowerCase()}` 
         const data = await this.getRawData(URL);
+        const data2 = await this.getRawData(`https://www.zacks.com/stock/quote/${stock}/income-statement`);
         try{
             $ = cheerio.load(data);
+            $$ = cheerio.load(data2);
         }
         catch(e){}
         const dataText = $('.rank_view').text();
         
         if(dataText.includes('1-Strong Buy'))
         {
-            content = `${stock}\n`;
+            content = `${stock}\n`
             contentPrint = `${stock} `
             if(counter % 30 == 0 && counter != 0 )
             {
@@ -48,6 +74,35 @@ module.exports.saveStrongBuyDataToFile = async (outputFile, allInputStocks, call
             }
             
             strongBuyStocks.push(stock)
+
+            if(outputFile.slice(-3) == 'csv')
+            {
+                content = this.getCSVData($('.rank_view').text(), headers, stock);   
+                let content2 = '';
+
+                if(headers2)
+                {
+                    var netIncomes = [];
+                    netCounter = 0;
+                    var links = $$("a");
+                    links.each(function(i, link) {
+                        if(links[i].attribs.href == `/stock/chart/${stock}/fundamental/net-income-ttm`)
+                        {
+                            if(links[i].children[0].data != "Net Income" && netCounter != 5)
+                            {
+                                netCounter++;
+                                netIncomes.push(links[i].children[0].data);
+                            }
+                                
+                        }
+                    });
+                    if(netIncomes)
+                        netIncomes.slice().reverse().forEach(element => content2 += (element + ','))
+                }
+
+                content += content2;
+                content = content.slice(0, content.length -1)+'\n'
+            }
             fs.appendFile(outputFile, content, err => {
                 if (err) {
                   console.error(err);
@@ -115,12 +170,22 @@ module.exports.outputStockData = async (outputFile, strongBuyStocks) => {
 }
 
 // run the program
-module.exports.runProgram = async (inputFile, outputFile) => {
+module.exports.runProgram = async (inputFile, outputFile, headers, headers2) => {
 
     console.log('Now running Money Duplication Glitch 4000.')
 
-    // erase all old data
-    fs.writeFile(outputFile, '', () => {})
+    if(outputFile.slice(-3) == 'txt')
+    {
+        fs.writeFile(outputFile, '', () => {})
+    }
+    else if(outputFile.slice(-3) == 'csv')
+    {
+        fs.writeFile(outputFile, headers + headers2, () => {})
+    }
+    else
+    {
+        throw console.log("only supports txt or csv output files")
+    }
 
-    this.inputStocks(inputFile, allInputStocks => this.saveStrongBuyDataToFile(outputFile, allInputStocks, strongBuyStocks => this.outputStockData(outputFile, strongBuyStocks)) );
+    this.inputStocks(inputFile, allInputStocks => this.saveStrongBuyDataToFile(outputFile, allInputStocks, headers, headers2, strongBuyStocks => this.outputStockData(outputFile, strongBuyStocks)) );
 }
