@@ -97,7 +97,7 @@ module.exports.saveStrongBuyDataToFile = async (outputFile, allInputStocks, head
                         }
                     });
                     if(netIncomes)
-                        netIncomes.slice().reverse().forEach(element => content2 += (element + ','))
+                        netIncomes.slice().reverse().forEach(element => content2 += ('"' + element + '",'))
                 }
 
                 content += content2;
