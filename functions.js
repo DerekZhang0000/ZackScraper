@@ -17,23 +17,25 @@ module.exports.getRawData = (URL) => {
         });
 };
 
-module.exports.getCSVData = (location, headers, stock) => {
+module.exports.getCSVData = ($, headers, stock) => {
     let retVal = '';
+    let mainData = $('.rank_view').text()
     headers = headers.slice(0, headers.length -1);
 
     const HEADER_CONFIG = {
         'Symbol' : { parser: stock},
-        'Industry Major' : { parser: location.split('Industry: ').pop().split(' - ')[0]},
-        'Industry Minor' : { parser: location.split('Industry: ').pop().split(' - ')[1]},
-        'Rank' : { parser: location.split('\n')[3].split(')')[0] + ')' },
-        'Value' : { parser: location.split('Value')[0].slice(-2).slice(0, 1)},
-        'Growth' : { parser: location.split('Growth')[0].slice(-2).slice(0, 1)},
-        'Momentum' : { parser: location.split('Momentum')[0].slice(-2).slice(0, 1)},
-        'VGM' : { parser: location.split('VGM')[0].slice(-2).slice(0, 1)},
+        'Name' : { parser: $(`a[href=/stock/quote/${stock}]`)[0].children[0].data.split(' (')[0]},
+        'Industry Major' : { parser: mainData.split('Industry: ').pop().split(' - ')[0]},
+        'Industry Minor' : { parser: mainData.split('Industry: ').pop().split(' - ')[1]},
+        'Rank' : { parser: mainData.split('\n')[3].split(')')[0] + ')' },
+        'Value' : { parser: mainData.split('Value')[0].slice(-2).slice(0, 1)},
+        'Growth' : { parser: mainData.split('Growth')[0].slice(-2).slice(0, 1)},
+        'Momentum' : { parser: mainData.split('Momentum')[0].slice(-2).slice(0, 1)},
+        'VGM' : { parser: mainData.split('VGM')[0].slice(-2).slice(0, 1)},
     }
    
     headers.forEach(field => {
-        retVal += ((field == 'Industry Minor' && location.split('Industry: ').pop().split(' - ').length == 1) ? "," : (HEADER_CONFIG[field].parser + ','));
+        retVal += ((field == 'Industry Minor' && mainData.split('Industry: ').pop().split(' - ').length == 1) ? "," : (HEADER_CONFIG[field].parser + ','));
     })
     return retVal;
 }
@@ -77,7 +79,7 @@ module.exports.saveStrongBuyDataToFile = async (outputFile, allInputStocks, head
 
             if(outputFile.slice(-3) == 'csv')
             {
-                content = this.getCSVData($('.rank_view').text(), headers, stock);   
+                content = this.getCSVData($, headers, stock);   
                 let content2 = '';
 
                 if(headers2)

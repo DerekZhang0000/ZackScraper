@@ -7,12 +7,13 @@ const functions = require('./functions.js')
 * - testStocksInput.txt
 */
 
-const INPUTFILE = 'stocksInput.txt';
+const INPUTFILE = 'testStocksInput.txt';
 const OUTPUTFILE = 'stocksOutput.csv';
 
 // If INPUTFILE is a .txt, only Symbol should be true
 const HEADER_CONFIG = [
     {type : 'Symbol', bool : true},
+    {type : 'Name', bool : true},
     {type : 'Industry Major', bool : true},
     {type : 'Industry Minor', bool : true},
     {type : 'Rank', bool : true},
