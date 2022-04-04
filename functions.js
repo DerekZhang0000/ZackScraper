@@ -132,7 +132,6 @@ module.exports.saveStrongBuyDataToFile = async (outputFile, allInputStocks, head
 
                             if(previousNum != 'null')
                             {
-                                console.log(`${currentNum} - ${previousNum} / ${previousNum} = ${(currentNum - previousNum) / previousNum}`)
                                 if(currentNum == 0 && nextNum == 0)
                                     yearlyIncrement.push(0); 
                                 else if(currentNum == 0)
@@ -144,7 +143,6 @@ module.exports.saveStrongBuyDataToFile = async (outputFile, allInputStocks, head
                             }
                         });
 
-                        console.log(yearlyIncrement)
                         let sum = yearlyIncrement.reduce(function (previousValue, currentValue) {
                             return previousValue + currentValue;
                         });
