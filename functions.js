@@ -1,4 +1,5 @@
 const cheerio = require("cheerio");
+const { prev } = require("cheerio/lib/api/traversing");
 const fs = require("fs");
 const fetch = require("node-fetch");
 var readline = require('readline');
@@ -127,23 +128,28 @@ module.exports.saveStrongBuyDataToFile = async (outputFile, allInputStocks, head
                         reverseNetIncomes.forEach((element, index) => {
                             let currentNum = Number(reverseNetIncomes[index]);
                             let nextNum = reverseNetIncomes[index + 1] ? Number(reverseNetIncomes[index + 1]) : 'null';
+                            let previousNum = reverseNetIncomes[index - 1] ? Number(reverseNetIncomes[index - 1]) : 'null';
 
-                            if(nextNum != 'null')
+                            if(previousNum != 'null')
                             {
+                                console.log(`${currentNum} - ${previousNum} / ${previousNum} = ${(currentNum - previousNum) / previousNum}`)
                                 if(currentNum == 0 && nextNum == 0)
                                     yearlyIncrement.push(0); 
                                 else if(currentNum == 0)
-                                    yearlyIncrement.push(1);
+                                    yearlyIncrement.push(-1);
+                                else if(previousNum == 0)
+                                    yearlyIncrement.push(1); 
                                 else
-                                    yearlyIncrement.push((nextNum / currentNum) - 1);
+                                    yearlyIncrement.push((currentNum - previousNum) / previousNum);
                             }
                         });
 
+                        console.log(yearlyIncrement)
                         let sum = yearlyIncrement.reduce(function (previousValue, currentValue) {
                             return previousValue + currentValue;
                         });
 
-                        content2 += (sum / yearlyIncrement.length) + ','
+                        content2 += ((sum / yearlyIncrement.length) * 100) + ','
 
                     }
                         
